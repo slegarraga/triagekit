@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Triagekit usage question"
+    url: "https://github.com/zanni098/triagekit/discussions"
+    about: "Please use discussions or documentation questions for general support."
+  - name: "Security or sensitive report"
+    url: "https://github.com/zanni098/triagekit/security/advisories/new"
+    about: "Use this channel for sensitive disclosures rather than a public issue."
