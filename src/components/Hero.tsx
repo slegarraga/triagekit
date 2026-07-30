@@ -1,103 +1,92 @@
 import { motion, useInView } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { ArrowDown, Github } from 'lucide-react'
 import { useRef } from 'react'
-import { WordsPullUp } from './WordsPullUp'
 
-const CUSTOM_EASE = [0.16, 1, 0.3, 1] as const
-
-const NAV_ITEMS = ['Our story', 'Collective', 'Workshops', 'Programs', 'Inquiries']
+const EASE = [0.16, 1, 0.3, 1] as const
 
 export function Hero() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
 
   return (
-    <section className="h-screen p-4 md:p-6" ref={ref}>
-      <div className="relative h-full w-full rounded-2xl md:rounded-[2rem] overflow-hidden">
-        {/* Background video */}
-        <video
-          className="absolute inset-0 w-full h-full object-cover"
-          autoPlay
-          loop
-          muted
-          playsInline
-          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4"
-        />
+    <section ref={ref} className="min-h-[80vh] flex items-center justify-center px-4 md:px-6 relative overflow-hidden">
+      {/* Grid background */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
+        }}
+      />
 
-        {/* Noise overlay */}
-        <div
-          className="noise-overlay opacity-[0.7] mix-blend-overlay pointer-events-none z-10"
-          aria-hidden="true"
-        />
+      <div className="relative max-w-4xl mx-auto text-center">
+        {/* Badge */}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={isInView ? { y: 0, opacity: 1 } : {}}
+          transition={{ duration: 0.6, ease: EASE }}
+          className="mb-6"
+        >
+          <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#6366f1]/10 border border-[#6366f1]/20 rounded-full text-[#818cf8] text-xs font-medium">
+            <Github className="w-3.5 h-3.5" />
+            For open-source maintainers
+          </span>
+        </motion.div>
 
-        {/* Gradient overlay */}
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60 z-10"
-          aria-hidden="true"
-        />
+        {/* Heading */}
+        <motion.h1
+          initial={{ y: 30, opacity: 0 }}
+          animate={isInView ? { y: 0, opacity: 1 } : {}}
+          transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium text-gray-100 leading-[0.95] tracking-tight"
+        >
+          Issue templates,<br />
+          <span className="text-gray-500">generated in seconds.</span>
+        </motion.h1>
 
-        {/* Navbar */}
-        <div className="absolute top-0 left-0 right-0 flex justify-center z-30">
-          <nav className="bg-black rounded-b-2xl md:rounded-b-3xl px-4 py-2 md:px-8">
-            <ul className="flex items-center gap-3 sm:gap-6 md:gap-12 lg:gap-14">
-              {NAV_ITEMS.map((item) => (
-                <li key={item}>
-                  <a
-                    href="#"
-                    className="text-[10px] sm:text-xs md:text-sm transition-colors duration-200"
-                    style={{ color: 'rgba(225, 224, 204, 0.8)' }}
-                    onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#E1E0CC')}
-                    onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'rgba(225, 224, 204, 0.8)')}
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
+        {/* Description */}
+        <motion.p
+          initial={{ y: 20, opacity: 0 }}
+          animate={isInView ? { y: 0, opacity: 1 } : {}}
+          transition={{ duration: 0.7, delay: 0.25, ease: EASE }}
+          className="text-gray-500 text-sm sm:text-base mt-6 max-w-xl mx-auto leading-relaxed"
+        >
+          TriageKit helps open-source maintainers create polished, consistent issue templates —
+          bug reports, feature requests, and support requests — so you can spend less time
+          triaging and more time building.
+        </motion.p>
 
-        {/* Hero content — bottom aligned, 12-col grid */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 grid grid-cols-12 items-end">
-          {/* Left 8 cols — giant heading */}
-          <div className="col-span-12 lg:col-span-8">
-            <h1
-              className="font-medium leading-[0.85] tracking-[-0.07em] text-[26vw] sm:text-[24vw] md:text-[22vw] lg:text-[20vw] xl:text-[19vw] 2xl:text-[20vw]"
-              style={{ color: '#E1E0CC' }}
-            >
-              <WordsPullUp text="Prisma" showAsterisk delay={0} />
-            </h1>
-          </div>
+        {/* CTA */}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={isInView ? { y: 0, opacity: 1 } : {}}
+          transition={{ duration: 0.7, delay: 0.4, ease: EASE }}
+          className="mt-10"
+        >
+          <a
+            href="#generator"
+            className="inline-flex items-center gap-2 bg-gray-100 text-black px-6 py-3 rounded-full text-sm font-medium hover:bg-gray-200 transition-all"
+          >
+            Start generating
+            <ArrowDown className="w-4 h-4" />
+          </a>
+        </motion.div>
 
-          {/* Right 4 cols — description + CTA */}
-          <div className="col-span-12 lg:col-span-4 flex flex-col gap-5 pb-8 lg:pb-10 px-6 lg:px-0 lg:pr-8">
-            <motion.p
-              className="text-primary/70 text-xs sm:text-sm md:text-base"
-              style={{ lineHeight: 1.2 }}
-              initial={{ y: 20, opacity: 0 }}
-              animate={isInView ? { y: 0, opacity: 1 } : {}}
-              transition={{ duration: 0.7, delay: 0.5, ease: CUSTOM_EASE }}
-            >
-              Prisma is a worldwide network of visual artists, filmmakers and storytellers bound not by place, status or
-              labels but by passion and hunger to unlock potential through our unique perspectives.
-            </motion.p>
-
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={isInView ? { y: 0, opacity: 1 } : {}}
-              transition={{ duration: 0.7, delay: 0.7, ease: CUSTOM_EASE }}
-            >
-              <button
-                className="group inline-flex items-center gap-2 hover:gap-3 bg-primary rounded-full pl-5 pr-1 py-1 transition-all duration-300"
-              >
-                <span className="text-black font-medium text-sm sm:text-base">Join the lab</span>
-                <span className="bg-black rounded-full w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 flex-shrink-0">
-                  <ArrowRight className="w-4 h-4 text-[#DEDBC8]" />
-                </span>
-              </button>
-            </motion.div>
-          </div>
-        </div>
+        {/* Scroll indicator */}
+        <motion.div
+          className="mt-20 flex justify-center"
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.7, delay: 0.6 }}
+        >
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <div className="w-5 h-8 rounded-full border border-white/10 flex justify-center pt-2">
+              <div className="w-1 h-2 rounded-full bg-gray-500" />
+            </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   )
