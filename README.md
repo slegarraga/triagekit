@@ -32,6 +32,9 @@ npm run build   # Build for production
 npm run preview # Preview production build
 ```
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to find an issue, claim it, and
+open a pull request.
+
 ## Stack
 
 - React 18 + TypeScript
