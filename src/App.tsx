@@ -18,6 +18,13 @@ export interface FormState {
   additionalFields: string
 }
 
+const INITIAL_FORM_STATE: FormState = {
+  projectName: '',
+  repoUrl: '',
+  type: 'bug-report',
+  additionalFields: '',
+}
+
 const TYPES: { value: TemplateType; label: string; desc: string }[] = [
   { value: 'bug-report', label: 'Bug Report', desc: 'Report unexpected behavior' },
   { value: 'feature-request', label: 'Feature Request', desc: 'Suggest a new feature' },
@@ -148,15 +155,14 @@ ${items[f.type].join('\n')}
 }
 
 export default function App() {
-  const [form, setForm] = useState<FormState>({
-    projectName: '',
-    repoUrl: '',
-    type: 'bug-report',
-    additionalFields: '',
-  })
+  const [form, setForm] = useState<FormState>(INITIAL_FORM_STATE)
 
   const update = useCallback((patch: Partial<FormState>) => {
     setForm(prev => ({ ...prev, ...patch }))
+  }, [])
+
+  const resetForm = useCallback(() => {
+    setForm(INITIAL_FORM_STATE)
   }, [])
 
   const outputs: GeneratedOutputs = {
@@ -168,7 +174,7 @@ export default function App() {
   return (
     <main className="bg-black min-h-screen">
       <Hero />
-      <Generator form={form} update={update} outputs={outputs} types={TYPES} />
+      <Generator form={form} update={update} reset={resetForm} outputs={outputs} types={TYPES} />
       <Features />
     </main>
   )

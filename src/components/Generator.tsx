@@ -1,12 +1,13 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Download, FileText, Copy, Check } from 'lucide-react'
+import { Download, FileText, Copy, Check, RotateCcw } from 'lucide-react'
 import type { FormState, GeneratedOutputs, TemplateType } from '../App'
 import { useState } from 'react'
 
 interface GeneratorProps {
   form: FormState
   update: (patch: Partial<FormState>) => void
+  reset: () => void
   outputs: GeneratedOutputs
   types: { value: TemplateType; label: string; desc: string }[]
 }
@@ -60,7 +61,7 @@ function CodeBlock({ title, content, filename }: { title: string; content: strin
 
 const INPUT_CLASS = "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-200 placeholder:text-gray-600 focus:outline-none focus:border-gray-500/50 focus:bg-white/[0.07] transition-all"
 
-export function Generator({ form, update, outputs, types }: GeneratorProps) {
+export function Generator({ form, update, reset, outputs, types }: GeneratorProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-80px' })
 
@@ -93,7 +94,17 @@ export function Generator({ form, update, outputs, types }: GeneratorProps) {
           >
             {/* Template type selector */}
             <div>
-              <label className="block text-xs text-gray-400 font-medium mb-3">Template Type</label>
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <label className="block text-xs text-gray-400 font-medium">Template Type</label>
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-medium text-gray-400 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-gray-200"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Reset
+                </button>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {types.map(t => (
                   <button
