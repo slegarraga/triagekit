@@ -89,19 +89,26 @@ assignees: ''
 ${bodyWithExtra}`
 }
 
+function issueUrlFor(repoUrl: string, projectName: string, type: TemplateType): string {
+  const repo = projectName ? slugify(projectName) : 'your-project'
+  const baseUrl = (repoUrl || `https://github.com/username/${repo}`).replace(/\/$/, '')
+  const labels: Record<TemplateType, string> = {
+    'bug-report': 'bug',
+    'feature-request': 'enhancement',
+    'support-request': 'question',
+  }
+
+  return `${baseUrl}/issues/new?labels=${encodeURIComponent(labels[type])}`
+}
+
 function generateConfig(f: FormState): string {
   const repo = f.projectName || 'your-project'
-  const types = ['bug-report', 'feature-request', 'support-request'] as TemplateType[]
+  const links = TYPES.map(t => {
+    return `  - name: ${t.label}\n    about: ${t.desc}\n    url: ${issueUrlFor(f.repoUrl, f.projectName, t.value)}`
+  })
 
-  const links = types
-    .filter(t => f.type === t ? true : false)
-    .map(t => {
-      const found = TYPES.find(x => x.value === t)!
-      return `  - about: ${found.desc}\n    name: ${found.label}\n    title: '[${t.split('-')[0]}]: '\n    labels: ['${t.split('-')[0]}']`
-    })
-
-  return `# ${repo} Issue Templates
-# Located in .github/ISSUE_TEMPLATE/
+  return `# ${repo} issue-template directory config
+# Save as .github/ISSUE_TEMPLATE/config.yml
 
 blank_issues_enabled: false
 contact_links:
