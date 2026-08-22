@@ -3,9 +3,9 @@ import { Hero } from './components/Hero'
 import { Generator } from './components/Generator'
 import { Features } from './components/Features'
 import { generateMarkdown, generateConfig, generateChecklist } from './lib/generators'
-import type { FormState } from './lib/generators'
+import type { FormState, TemplateType } from './lib/generators'
 
-export type { FormState } from './lib/generators'
+export type { FormState, TemplateType } from './lib/generators'
 
 export interface GeneratedOutputs {
   markdown: string
