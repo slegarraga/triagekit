@@ -30,6 +30,7 @@ npm install
 npm run dev     # Start dev server
 npm run build   # Build for production
 npm run preview # Preview production build
+npm test        # Run unit tests (Vitest + React Testing Library)
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how to find an issue, claim it, and
