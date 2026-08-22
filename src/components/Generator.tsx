@@ -4,6 +4,7 @@ import { Download, FileText, Copy, Check, RotateCcw } from 'lucide-react'
 import type { FormState, GeneratedOutputs, TemplateType } from '../App'
 import { useState } from 'react'
 import { slugify } from '../lib/slug'
+import { validateForm } from '../lib/validation'
 
 interface GeneratorProps {
   form: FormState
@@ -65,6 +66,9 @@ const INPUT_CLASS = "w-full bg-white/5 border border-white/10 rounded-lg px-4 py
 export function Generator({ form, update, reset, outputs, types }: GeneratorProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-80px' })
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
+  const errors = validateForm(form)
+  const hasErrors = Object.keys(errors).length > 0
 
   return (
     <section id="generator" ref={ref} className="py-20 md:py-28 px-4 md:px-6">
@@ -134,9 +138,14 @@ export function Generator({ form, update, reset, outputs, types }: GeneratorProp
                 type="text"
                 value={form.projectName}
                 onChange={e => update({ projectName: e.target.value })}
+                onBlur={() => setTouched(t => ({ ...t, projectName: true }))}
                 placeholder="e.g. my-awesome-lib"
                 className={INPUT_CLASS}
+                aria-invalid={Boolean(errors.projectName)}
               />
+              {touched.projectName && errors.projectName && (
+                <p className="mt-1 text-xs text-red-400" role="alert">{errors.projectName}</p>
+              )}
             </div>
 
             {/* Repo URL */}
@@ -149,9 +158,14 @@ export function Generator({ form, update, reset, outputs, types }: GeneratorProp
                 type="text"
                 value={form.repoUrl}
                 onChange={e => update({ repoUrl: e.target.value })}
+                onBlur={() => setTouched(t => ({ ...t, repoUrl: true }))}
                 placeholder="https://github.com/user/repo"
                 className={INPUT_CLASS}
+                aria-invalid={Boolean(errors.repoUrl)}
               />
+              {touched.repoUrl && errors.repoUrl && (
+                <p className="mt-1 text-xs text-red-400" role="alert">{errors.repoUrl}</p>
+              )}
             </div>
 
             {/* Additional fields */}
@@ -165,8 +179,15 @@ export function Generator({ form, update, reset, outputs, types }: GeneratorProp
                 onChange={e => update({ additionalFields: e.target.value })}
                 placeholder="Add extra markdown sections to include..."
                 rows={4}
+                maxLength={5000}
                 className={`${INPUT_CLASS} resize-none`}
+                aria-invalid={Boolean(errors.additionalFields)}
               />
+              {errors.additionalFields ? (
+                <p className="mt-1 text-xs text-red-400" role="alert">{errors.additionalFields}</p>
+              ) : (
+                <p className="mt-1 text-[10px] text-gray-600">{form.additionalFields.length}/5000</p>
+              )}
             </div>
           </motion.div>
 
@@ -202,19 +223,26 @@ export function Generator({ form, update, reset, outputs, types }: GeneratorProp
             </div>
 
             {/* Bulk download */}
-            <div className="flex justify-end pt-2">
+            <div className="flex flex-col items-end gap-1.5 pt-2">
               <button
                 onClick={() => {
+                  setTouched({ projectName: true, repoUrl: true })
+                  if (hasErrors) return
                   const slug = form.projectName ? slugify(form.projectName) : 'triagekit'
                   downloadFile(outputs.markdown, `${slug}-${form.type}.md`)
                   downloadFile(outputs.config, `${slug}-config.yml`)
                   downloadFile(outputs.checklist, `${slug}-checklist.md`)
                 }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#6366f1] hover:bg-[#5457e5] text-white text-sm font-medium rounded-lg transition-colors"
+                disabled={hasErrors}
+                title={hasErrors ? 'Fix the highlighted fields first' : undefined}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#6366f1] hover:bg-[#5457e5] text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <Download className="w-4 h-4" />
                 Download All
               </button>
+              {hasErrors && (
+                <span className="text-[10px] text-gray-500">Fix the highlighted fields to enable download.</span>
+              )}
             </div>
           </motion.div>
         </div>
