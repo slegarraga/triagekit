@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [20, 22]
+        node: [22, 24]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -39,7 +39,5 @@ jobs:
       - name: Build
         run: npm run build
 
-      # No test script exists on main yet; #39 adds Vitest. --if-present keeps
-      # this step green today and picks the suite up automatically on merge.
       - name: Test
-        run: npm run --if-present test
+        run: npm test
